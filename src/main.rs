@@ -7,41 +7,29 @@ fn main() -> io::Result<()> {
     let path = ".";
 
     for entry in WalkDir::new(".") {
-        let file = entry?.path().to_str();
+        // method path() belongs to the DirEntry inside of the Result class returned by WalkDir::new
+        // have to use operators like expect(), ? or unwrap() to extract it
+        // ? unpacks the Result returned from WalkDir if it is Ok()
+        // Otherwise it returns an error
+        let entry = entry?;
+        let path = entry.path();
+        let fileName = path.to_str();
 
-        match file {
+        match fileName {
             Some(x) => {
-                let reader = BufReader::new(x);
-                for line in reader.lines() {
-                    println!("{}", line?);
-                }
+                let mut file = File::open(x)?;
+                let mut content = String::new();
+
+                file.read_to_string(&mut content)?;
+
+                println!("{}", content);
             }
             None => {
                 println!("File name not found.");
             }
         }
 
-        let reader = BufReader::new(file);
-        for line in reader.lines() {
-            println!("{}", line?);
-        }
-        // println!("{}", entry?.path().display());
     }
-
-    // for entry in fs::read_dir(path).unwrap() {
-    //     let entry = entry.unwrap();
-    //     // println!("{}", entry.path().display());
-    //     let fileName =
-    //     let file = File::open(String.from_utf8_lossy(entry))?;
-    //     let reader = BufReader::new(file);
-    // }
-
-    // let file = File::open(name)?;
-    // let reader = BufReader::new(file);
-
-    // for line in reader.lines() {
-    //     println!("{}", line?);
-    // }
 
     Ok(())
 }
