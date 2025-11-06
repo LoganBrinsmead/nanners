@@ -12,23 +12,28 @@ fn main() -> io::Result<()> {
         // ? unpacks the Result returned from WalkDir if it is Ok()
         // Otherwise it returns an error
         let entry = entry?;
-        let path = entry.path();
-        let fileName = path.to_str();
+        if (!entry.path().is_dir() ) {
+            let path = entry.path();
+            let fileName = path.to_str();
 
-        match fileName {
-            Some(x) => {
-                let mut file = File::open(x)?;
-                let mut content = String::new();
+            match fileName {
+                Some(x) => {
+                    let mut file = File::open(x)?;
+                    let mut content = String::new();
 
-                file.read_to_string(&mut content)?;
+                    file.read_to_string(&mut content)?;
 
-                println!("{}", content);
-            }
-            None => {
-                println!("File name not found.");
+                    if content.contains("nanners") {
+                        println!("File that contains nanners: {}", x);
+                    }
+
+                    // println!("{}", content);
+                }
+                None => {
+                    println!("File name not found.");
+                }
             }
         }
-
     }
 
     Ok(())
