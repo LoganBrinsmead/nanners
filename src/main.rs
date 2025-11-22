@@ -4,9 +4,11 @@ use std::str;
 use walkdir::WalkDir;
 
 fn main() -> io::Result<()> {
-    let path = ".";
+    // this is a good example to look into temporary lifetimes
+    // TODO: not all paths are UTF-8 encoded
+    let path = std::env::current_dir().unwrap().into_os_string();
 
-    for entry in WalkDir::new(".") {
+    for entry in WalkDir::new(path) {
         // method path() belongs to the DirEntry inside of the Result class returned by WalkDir::new
         // have to use operators like expect(), ? or unwrap() to extract it
         // ? unpacks the Result returned from WalkDir if it is Ok()
